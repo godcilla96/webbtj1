@@ -13,7 +13,8 @@ db.serialize(() => {
             jobtitle TEXT NOT NULL,
             location TEXT NOT NULL,
             startdate DATE NOT NULL,
-            endndate DATE NOT NULL
+            enddate DATE NOT NULL,
+            description TEXT NOT NULL
         );
     `);
 });

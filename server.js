@@ -28,7 +28,18 @@ app.get("/cv/workexp", (req, res) => {
 });
 
 app.post("/cv/workexp", (req, res) => {
-    res.json({message: "POST request till worksexperience"});
+    const { companyname, jobtitle, location, startdate, enddate, description } = req.body;
+
+    db.run(
+        "INSERT INTO workexperience (companyname, jobtitle, location, startdate, enddate, description) VALUES (?, ?, ?, ?, ?, ?)",
+        [companyname, jobtitle, location, startdate, enddate, description],
+        function (err) {
+            if (err) {
+                return res.status(500).json({ error: err.message });
+            }
+            res.json({ message: "Arbetslivserfarenhet tillagd", id: this.lastID });
+        }
+    );
 });
 
 app.delete("/cv/workexp/:id", (req, res) => {
@@ -38,6 +49,11 @@ app.delete("/cv/workexp/:id", (req, res) => {
 app.put("/cv/workexp/:id", (req, res) => {
     res.json({message: "PUT request till workexperience med id: " + req.params.id});
 });
+
+//databaskod
+const sqlite3 = require("sqlite3").verbose();
+app.use(express.urlencoded({ extended: true }));
+const db = new sqlite3.Database("./cv.db");
 
 
 //Starta applikationen
