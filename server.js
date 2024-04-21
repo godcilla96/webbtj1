@@ -18,13 +18,25 @@ app.use(express.json());
 //Middleware
 app.use(bodyParser.json());
 
+//databaskod
+const sqlite3 = require("sqlite3").verbose();
+app.use(express.urlencoded({ extended: true }));
+const db = new sqlite3.Database("./cv.db");
+
 //Routing
 app.get("/cv", (req, res) => {
     res.json({message: "Nu har du tagit dig till cv-sidan"});
 });
 
-app.get("/cv/workexp", (req, res) => {
-    res.json({message: "GET request till workexperience"});
+app.get("/cv/workexperience", (req, res) => {
+    db.all("SELECT * FROM workexperience", (err, rows) => {
+        if (err) {
+            res.status(500).json({ error: err.message });
+            return;
+        }
+        res.json(rows);
+        console.table(rows);
+    });
 });
 
 app.post("/cv/workexp", (req, res) => {
@@ -42,18 +54,34 @@ app.post("/cv/workexp", (req, res) => {
     );
 });
 
+
 app.delete("/cv/workexp/:id", (req, res) => {
-    res.json({message: "DELETE request till workexperience med id: " + req.params.id});
+    const id = req.params.id;
+    db.run("DELETE FROM workexperience WHERE id = ?", id, function (err) {
+        if (err) {
+            res.status(500).json({ error: err.message });
+            return;
+        }
+        res.json({ message: `Work experience with ID ${id} deleted` });
+    });
 });
 
 app.put("/cv/workexp/:id", (req, res) => {
-    res.json({message: "PUT request till workexperience med id: " + req.params.id});
+    const { companyname, jobtitle, location, startdate, enddate, description } = req.body;
+    const id = req.params.id;
+    db.run(
+        "UPDATE workexperience SET companyname = ?, jobtitle = ?, location = ?, startdate = ?, enddate = ?, description = ? WHERE id = ?",
+        [companyname, jobtitle, location, startdate, enddate, description, id],
+        function (err) {
+            if (err) {
+                res.status(500).json({ error: err.message });
+                return;
+            }
+            res.json({ message: `Work experience with ID ${id} updated` });
+        }
+    );
 });
 
-//databaskod
-const sqlite3 = require("sqlite3").verbose();
-app.use(express.urlencoded({ extended: true }));
-const db = new sqlite3.Database("./cv.db");
 
 
 //Starta applikationen
