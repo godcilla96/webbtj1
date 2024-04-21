@@ -39,6 +39,26 @@ app.get("/cv/workexperience", (req, res) => {
     });
 });
 
+app.get("/cv/workexperience/:id", (req, res) => {
+    const id = req.params.id;
+
+    // inhämta all information från tabellen för det angivna id:t
+    db.get("SELECT * FROM workexperience WHERE id = ?", [id], (err, row) => {
+        if (err) {
+            res.status(500).json({ error: err.message });
+            return;
+        }
+        if (!row) {
+            // om ingen data matchar id:t visas errormeddelande
+            res.status(404).json({ message: "Work experience not found" });
+            return;
+        }
+        res.json(row);
+    });
+});
+
+
+//lägga till arbetserfarenhen
 app.post("/cv/workexp", (req, res) => {
     const { companyname, jobtitle, location, startdate, enddate, description } = req.body;
 
@@ -49,12 +69,12 @@ app.post("/cv/workexp", (req, res) => {
             if (err) {
                 return res.status(500).json({ error: err.message });
             }
-            res.json({ message: "Arbetslivserfarenhet tillagd", id: this.lastID });
+            res.json({ message: "Work experience added", id: this.lastID });
         }
     );
 });
 
-
+//radera arbetserfarenhet via id
 app.delete("/cv/workexp/:id", (req, res) => {
     const id = req.params.id;
     db.run("DELETE FROM workexperience WHERE id = ?", id, function (err) {
@@ -66,6 +86,7 @@ app.delete("/cv/workexp/:id", (req, res) => {
     });
 });
 
+//uppdatera arbetserfarenhet via id
 app.put("/cv/workexp/:id", (req, res) => {
     const { companyname, jobtitle, location, startdate, enddate, description } = req.body;
     const id = req.params.id;
@@ -81,8 +102,6 @@ app.put("/cv/workexp/:id", (req, res) => {
         }
     );
 });
-
-
 
 //Starta applikationen
 app.listen(port, () => {
