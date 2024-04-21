@@ -7,5 +7,34 @@
 </head>
 <body>
     <h1>Hej, här kodas moment 2</h1>
+    <div id="workExperienceList">
+        <!-- Work experiences will be displayed here -->
+    </div>
+
+    <script>
+        // Fetch data from API
+        async function addExperience() {
+    let experience = {
+        companyname: "Kommunen",
+        jobtitle: "sjuksköterska",
+        location: "Piteå",
+        startdate: 2024-01-01,
+        enddate: 2024-06-01,
+        description: "räddat liv"
+
+    }
+
+    let response = await fetch('http://localhost:3300/cv/workexp', {
+        method: 'POST',
+        headers: {
+        'Content-Type': 'application/json'
+    },
+        body: JSON.stringify(experience)
+    });
+
+    let data = await response.json();
+    console.log(data);
+}
+    </script>
 </body>
 </html>
