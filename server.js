@@ -23,6 +23,9 @@ const sqlite3 = require("sqlite3").verbose();
 app.use(express.urlencoded({ extended: true }));
 const db = new sqlite3.Database("./cv.db");
 
+//Statiska filer
+app.use(express.static('public'));
+
 //Routing
 app.get("/cv", (req, res) => {
     res.json({message: "Nu har du tagit dig till cv-sidan"});
