@@ -64,7 +64,10 @@ app.get("/cv/workexperience/:id", (req, res) => {
 //lägga till arbetserfarenhen
 app.post("/cv/workexp", (req, res) => {
     const { companyname, jobtitle, location, startdate, enddate, description } = req.body;
-
+    //validerar datan
+    if (!companyname || !jobtitle || !location || !startdate || !enddate || !description) {
+        return res.status(400).json({ error: "All fields are required" });
+    }
     db.run(
         "INSERT INTO workexperience (companyname, jobtitle, location, startdate, enddate, description) VALUES (?, ?, ?, ?, ?, ?)",
         [companyname, jobtitle, location, startdate, enddate, description],
