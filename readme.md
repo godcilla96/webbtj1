@@ -12,7 +12,7 @@ Projektet använder sqlite/sqlite3 för databasanslutning. Tabellen heter workex
 och har 7 olika kolumner (id, companyname, jobtitle, location, startdate, enddate och description).
 För att möjliggöra testkörning till en annan domän har CORS installets och använts i Express-projektet.
 
-Detta CRUD-operationer:
+Dessa CRUD-operationer används:
 | HTTP-metod | Slutpunkt                | Beskrivning                                      |
 |------------|--------------------------|--------------------------------------------------|
 | GET        | /cv/workexperience       | Hämtar lagrad data för arbetserfarenheter       |
